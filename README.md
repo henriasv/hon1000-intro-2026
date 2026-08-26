@@ -14,8 +14,11 @@ snøfall, store bilete og annonseplassar med plasshaldarar for UiO Honours.
 
 ## Publisering
 
-Mappa kan leggjast rett ut på Netlify, GitHub Pages eller UiO-webben:
-last opp `index.html` og `img/`. Skriftene (Bodoni Moda, Nunito Sans,
+Sida ligg ute på GitHub Pages: **https://henriasv.github.io/hon1000-intro-2026/**
+
+Pages byggjer frå `main` (rotmappa), så kvar `git push` til `main` oppdaterer
+sida i løpet av eit par minutt. Mappa kan òg leggjast rett ut på Netlify eller
+UiO-webben: last opp `index.html` og `img/`. Skriftene (Bodoni Moda, Nunito Sans,
 IBM Plex Mono) blir henta frå Google Fonts.
 
 ## Annonseplassar
