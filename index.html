@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="nn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HON1000 Innføring</title>
+<meta name="description" content="Første forelesing i HON1000: praktisk informasjon, forventningar og ei historisk oversikt over kunstig intelligens. Pynta til jul, sjølv om det er august.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..800;1,6..96,400..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,400..800;1,6..12,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --night: #0B1526;
+    --night-2: #122140;
+    --night-3: #1A2D50;
+    --pine: #1F5C42;
+    --pine-2: #2E7D5A;
+    --berry: #B5303F;
+    --berry-2: #E04E5F;
+    --gold: #E6B85E;
+    --gold-2: #F7D88F;
+    --gold-3: #B8862F;
+    --snow: #F4EFE4;
+    --paper: #FBF6EA;
+    --paper-ink: #1B2233;
+    --mist: #B3BDCE;
+    --frost: #7D889D;
+    --line: rgba(244, 239, 228, 0.13);
+    --postit: #F7E27E;
+    --postit-2: #E9CF5A;
+
+    --b-red: #FF5C6C;
+    --b-green: #5CE79A;
+    --b-gold: #FFD56E;
+    --b-blue: #74B9FF;
+    --b-pink: #FF8AD0;
+
+    --display: "Bodoni Moda", "Bodoni 72", "Didot", "Times New Roman", serif;
+    --body: "Nunito Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
+
+    --maxw: 1120px;
+    --measure: 62ch;
+    --pad: clamp(18px, 4vw, 40px);
+    --lights-h: 64px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    background: var(--night);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    background:
+      radial-gradient(60% 40% at 100% 0%, rgba(181, 48, 63, 0.16), transparent 70%),
+      radial-gradient(55% 45% at 0% 100%, rgba(31, 92, 66, 0.22), transparent 70%),
+      var(--night);
+    color: var(--snow);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.65;
+    padding-top: var(--lights-h);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: rgba(230, 184, 94, 0.35); color: var(--snow); }
+
+  a { color: var(--gold-2); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: #fff; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  img { max-width: 100%; height: auto; display: block; }
+
+  /* ---------- lights, snow, progress ---------- */
+  .lights {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--lights-h);
+    z-index: 5;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .lights svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .lights path { fill: none; stroke: #3B4A63; stroke-width: 2; }
+  .bulb {
+    position: absolute;
+    width: 12px; height: 18px;
+    margin-left: -6px;
+    border-radius: 50% 50% 55% 55% / 40% 40% 60% 60%;
+    background: radial-gradient(circle at 40% 30%, #fff 0%, var(--c) 35%, color-mix(in srgb, var(--c) 60%, #000) 100%);
+    box-shadow:
+      0 0 6px 1px var(--c),
+      0 0 18px 5px color-mix(in srgb, var(--c) 40%, transparent);
+    transform-origin: 50% -6px;
+    animation: twinkle var(--t, 2.6s) ease-in-out var(--d, 0s) infinite;
+  }
+  .bulb::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: -7px;
+    width: 8px; height: 8px;
+    margin-left: -4px;
+    background: #4A5A78;
+    border-radius: 2px 2px 0 0;
+  }
+  .bulb--red { --c: var(--b-red); }
+  .bulb--green { --c: var(--b-green); }
+  .bulb--gold { --c: var(--b-gold); }
+  .bulb--blue { --c: var(--b-blue); }
+  .bulb--pink { --c: var(--b-pink); }
+  .bulb--blink { animation-name: blink; animation-timing-function: steps(1, end); }
+  .bulb--sway { animation: twinkle var(--t, 2.6s) ease-in-out var(--d, 0s) infinite, sway 5s ease-in-out var(--d, 0s) infinite; }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; filter: brightness(1.05); }
+    50% { opacity: 0.35; filter: brightness(0.7); }
+  }
+  @keyframes blink {
+    0%, 45% { opacity: 1; }
+    50%, 95% { opacity: 0.18; }
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-4deg); }
+    50% { transform: rotate(4deg); }
+  }
+
+  #snow {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 6;
+    pointer-events: none;
+  }
+  .progress i {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--berry-2), var(--gold), var(--pine-2));
+  }
+
+  .page { position: relative; z-index: 1; }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin-inline: auto;
+    padding-inline: var(--pad);
+  }
+
+  /* ---------- typography ---------- */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .eyebrow--muted { color: var(--frost); }
+
+  h1, h2, h3, h4 {
+    font-family: var(--display);
+    font-optical-sizing: auto;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+    color: var(--snow);
+  }
+  h2 { font-size: clamp(36px, 5.6vw, 68px); }
+  h3 { font-size: clamp(26px, 3.4vw, 40px); }
+  h4 { font-size: clamp(20px, 2.2vw, 24px); line-height: 1.2; }
+
+  .lede {
+    font-size: clamp(18px, 2vw, 21px);
+    line-height: 1.55;
+    color: var(--mist);
+    max-width: var(--measure);
+  }
+  .prose { max-width: var(--measure); }
+  .prose p + p { margin-top: 1em; }
+  .prose p { color: var(--mist); }
+  .prose strong, .list strong { color: var(--snow); font-weight: 700; }
+
+  .list { list-style: none; max-width: var(--measure); }
+  .list li {
+    position: relative;
+    padding-left: 26px;
+    color: var(--mist);
+  }
+  .list li + li { margin-top: 10px; }
+  .list li::before {
+    content: "";
+    position: absolute;
+    left: 4px; top: 0.72em;
+    width: 7px; height: 7px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+  .list--snow li { color: var(--snow); }
+
+  .cap {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--frost);
+    line-height: 1.5;
+  }
+
+  .quote {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(20px, 2.4vw, 27px);
+    line-height: 1.4;
+    color: var(--snow);
+    max-width: 30em;
+    padding-left: 22px;
+    border-left: 2px solid var(--gold);
+  }
+  .quote--sm { font-size: clamp(18px, 2vw, 22px); }
+  .quote cite {
+    display: block;
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative;
+    min-height: calc(92svh - var(--lights-h));
+    display: grid;
+    align-content: center;
+    padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 96px);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.7), transparent 60%),
+      radial-gradient(1px 1px at 33% 9%, rgba(255,255,255,0.5), transparent 60%),
+      radial-gradient(1.5px 1.5px at 58% 22%, rgba(255,255,255,0.65), transparent 60%),
+      radial-gradient(1px 1px at 78% 12%, rgba(255,255,255,0.55), transparent 60%),
+      radial-gradient(1px 1px at 88% 34%, rgba(255,255,255,0.45), transparent 60%),
+      radial-gradient(1.5px 1.5px at 46% 40%, rgba(255,255,255,0.5), transparent 60%),
+      radial-gradient(1px 1px at 22% 52%, rgba(255,255,255,0.4), transparent 60%),
+      radial-gradient(1px 1px at 68% 58%, rgba(255,255,255,0.4), transparent 60%),
+      radial-gradient(1px 1px at 92% 74%, rgba(255,255,255,0.35), transparent 60%);
+  }
+  .hero__inner { position: relative; }
+  .hero__code {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(64px, 14vw, 172px);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(230, 184, 94, 0.28);
+    margin-top: 18px;
+  }
+  .hero__title {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(26px, 4.4vw, 52px);
+    line-height: 1.12;
+    max-width: 16em;
+    margin-top: 14px;
+    color: var(--snow);
+  }
+  .hero__meta {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--mist);
+  }
+  .hero__meta b { color: var(--snow); font-weight: 500; }
+  .hero__wink {
+    margin-top: 40px;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: clamp(16px, 1.7vw, 19px);
+    color: var(--gold-2);
+  }
+  .hero__toc {
+    margin-top: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .hero__toc a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--snow);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 9px 16px;
+    background: rgba(11, 21, 38, 0.55);
+    transition: border-color 0.25s, color 0.25s;
+  }
+  .hero__toc a:hover { border-color: var(--gold); color: var(--gold-2); }
+
+  /* ---------- ads ---------- */
+  .ad {
+    position: relative;
+    background: var(--paper);
+    color: var(--paper-ink);
+    border-radius: 6px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+  }
+  .ad__tag, .ad__ph {
+    position: absolute;
+    top: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7A6E55;
+  }
+  .ad__tag { left: 12px; }
+  .ad__ph { right: 12px; }
+  .ad__mark {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.01em;
+    color: var(--pine);
+    white-space: nowrap;
+  }
+  .ad__mark small {
+    display: block;
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7A6E55;
+    margin-top: 2px;
+  }
+  .ad__text { font-size: 15px; line-height: 1.45; color: #3A4256; }
+  .ad__text strong { color: var(--paper-ink); }
+  .ad__cta {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--berry);
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .ad__cta:hover { background: var(--berry-2); color: #fff; }
+
+  .ad--leader {
+    margin: 0 auto;
+    max-width: 980px;
+    padding: 30px 24px 18px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 22px;
+  }
+  .ad--box {
+    padding: 34px 24px 24px;
+    display: grid;
+    gap: 14px;
+    max-width: 360px;
+    margin-inline: auto;
+  }
+  .ad--box .ad__text { font-size: 16px; }
+  .ad--box .ad__cta { justify-self: start; }
+  .ad--tall {
+    padding: 34px 22px 24px;
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    width: 300px;
+    min-height: 600px;
+  }
+  .ad--tall .ad__art {
+    height: 210px;
+    border-radius: 4px;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(247, 216, 143, 0.9), transparent 40%),
+      linear-gradient(180deg, var(--night-2), var(--pine));
+    display: grid;
+    place-items: center;
+  }
+  .ad--tall .ad__art span {
+    font-family: var(--display);
+    font-style: italic;
+    color: var(--gold-2);
+    font-size: 26px;
+    text-align: center;
+    padding: 0 14px;
+    line-height: 1.15;
+  }
+  .adslot { padding-block: clamp(28px, 4vw, 48px); }
+
+  @media (max-width: 760px) {
+    .ad--leader {
+      grid-template-columns: 1fr;
+      text-align: left;
+      gap: 12px;
+      padding: 30px 20px 20px;
+    }
+  }
+
+  /* ---------- chapters ---------- */
+  .chapter {
+    border-top: 1px solid var(--line);
+    padding-block: clamp(64px, 9vw, 130px);
+  }
+  .chapter__head { margin-bottom: clamp(36px, 5vw, 64px); }
+  .chapter__head h2 { margin-top: 12px; }
+  .chapter__head .lede { margin-top: 18px; }
+
+  .block { margin-top: clamp(56px, 8vw, 112px); }
+  .block h3 { margin-bottom: 18px; }
+  .block .eyebrow + h3 { margin-top: 10px; }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 72px);
+    align-items: center;
+  }
+  .split--text-wide { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+  .split--img-wide { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); }
+  .split > .figure { margin: 0; }
+  @media (max-width: 820px) {
+    .split, .split--text-wide, .split--img-wide { grid-template-columns: 1fr; }
+    .split--flip > .figure { order: -1; }
+  }
+
+  .figure { margin: 0; }
+  .figure img {
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  }
+  .figure figcaption { margin-top: 12px; }
+  .figure--paper img { background: #fff; padding: 10px; }
+
+  .bleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+  .bleed img { border-radius: 0; box-shadow: none; }
+  .bleed--wrap { padding-inline: var(--pad); }
+
+  .hero-figure { position: relative; }
+  .hero-figure img { width: 100%; max-height: 82vh; object-fit: cover; }
+  .hero-figure figcaption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 60px var(--pad) 22px;
+    background: linear-gradient(180deg, transparent, rgba(11, 21, 38, 0.92));
+  }
+  .hero-figure figcaption .eyebrow { display: block; }
+  .hero-figure figcaption h3 { margin-top: 8px; margin-bottom: 0; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--gold);
+    margin-block: clamp(36px, 6vw, 72px);
+  }
+  .divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .divider svg { width: 22px; height: 22px; }
+
+  /* ---------- people ---------- */
+  .people {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 3vw, 32px);
+  }
+  .person img {
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  }
+  .person__name {
+    margin-top: 14px;
+    font-family: var(--display);
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .person__role { margin-top: 4px; }
+  .people__more {
+    margin-top: 28px;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: clamp(20px, 2.6vw, 30px);
+    color: var(--gold-2);
+  }
+  @media (max-width: 600px) {
+    .people { grid-template-columns: 1fr 1fr; }
+    .people .person:last-child { grid-column: span 2; max-width: 50%; }
+  }
+
+  /* ---------- pills ---------- */
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; max-width: 820px; }
+  .pill {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(18px, 2.2vw, 24px);
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: 1px solid rgba(230, 184, 94, 0.55);
+    color: var(--snow);
+    background: rgba(18, 33, 64, 0.6);
+  }
+  .pill--faint { color: var(--frost); border-style: dashed; }
+
+  /* ---------- three cards ---------- */
+  .cards3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 22px);
+  }
+  .card {
+    border-radius: 8px;
+    padding: clamp(22px, 3vw, 32px);
+    background: var(--night-2);
+    border: 1px solid var(--line);
+  }
+  .card h3 { font-size: clamp(26px, 3vw, 36px); margin-bottom: 18px; }
+  .card--pine { background: linear-gradient(160deg, #235F46, #173F30); border-color: rgba(92, 231, 154, 0.25); }
+  .card--berry { background: linear-gradient(160deg, #9E2A3A, #6E1E2B); border-color: rgba(255, 92, 108, 0.3); }
+  .card--gold { background: linear-gradient(160deg, #1B2C4E, #12203B); border-color: rgba(230, 184, 94, 0.5); }
+  .card .list li { color: rgba(244, 239, 228, 0.86); }
+  .card--pine .list li::before, .card--berry .list li::before { background: var(--gold-2); }
+  @media (max-width: 820px) { .cards3 { grid-template-columns: 1fr; } }
+
+  /* ---------- themes ---------- */
+  .themes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 22px);
+  }
+  .theme {
+    position: relative;
+    border-radius: 8px;
+    padding: clamp(22px, 3vw, 30px);
+    border: 1px solid var(--line);
+    background: var(--night-2);
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .theme--active {
+    background: linear-gradient(160deg, #6E2A5A, #3E1B3C);
+    border-color: rgba(255, 138, 208, 0.35);
+  }
+  .theme--next { background: linear-gradient(160deg, #1E4E3C, #163A2E); }
+  .theme h4 { margin-top: 2px; }
+  .theme__people {
+    list-style: none;
+    margin-top: 6px;
+    display: grid;
+    gap: 8px;
+  }
+  .theme__people li { color: var(--snow); line-height: 1.35; }
+  .theme__people small { display: block; color: var(--mist); font-size: 14px; }
+  .theme__note { color: var(--mist); font-size: 15px; }
+  @media (max-width: 680px) { .themes { grid-template-columns: 1fr; } }
+
+  .ways {
+    margin-top: clamp(32px, 4vw, 48px);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .way {
+    border-top: 2px solid var(--gold);
+    padding-top: 14px;
+  }
+  .way b { display: block; font-family: var(--display); font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+  .way span { color: var(--mist); font-size: 15px; }
+  @media (max-width: 820px) { .ways { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .ways { grid-template-columns: 1fr; } }
+
+  /* ---------- reflection form ---------- */
+  .form {
+    background: var(--paper);
+    color: var(--paper-ink);
+    border-radius: 6px;
+    padding: clamp(18px, 3vw, 30px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    display: grid;
+    gap: 14px;
+    transform: rotate(-0.6deg);
+  }
+  .form__row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 15px;
+  }
+  .form__row b { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pine); }
+  .form__row i { display: block; border-bottom: 1px dashed #B9AE94; height: 1.2em; }
+  .form__field {
+    border: 1px solid #D9CFB6;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .form__field header {
+    background: #E9F0E6;
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #2F3A44;
+  }
+  .form__field header b { color: var(--pine); font-weight: 800; }
+  .form__field .lines {
+    height: 84px;
+    background: repeating-linear-gradient(180deg, transparent 0 27px, #E3DAC3 27px 28px);
+  }
+  .form__field--tall .lines { height: 112px; }
+  @media (max-width: 520px) { .form__row { grid-template-columns: 1fr; gap: 4px; } }
+
+  .stat {
+    display: grid;
+    gap: 4px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+  }
+  .stat b {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat span { color: var(--mist); }
+  .stats { display: grid; gap: 4px; margin-top: 28px; max-width: 420px; }
+
+  /* ---------- callouts ---------- */
+  .callout {
+    border: 1px solid rgba(230, 184, 94, 0.5);
+    border-radius: 8px;
+    padding: clamp(24px, 4vw, 44px);
+    background: linear-gradient(160deg, rgba(18, 33, 64, 0.9), rgba(11, 21, 38, 0.9));
+    max-width: 860px;
+  }
+  .callout h3 { margin-bottom: 14px; }
+
+  /* ---------- history chips ---------- */
+  .eras {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .era {
+    text-decoration: none;
+    color: var(--snow);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px 18px;
+    display: grid;
+    gap: 6px;
+    background: rgba(18, 33, 64, 0.5);
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .era:hover { border-color: var(--gold); transform: translateY(-2px); color: var(--snow); }
+  .era b { font-family: var(--display); font-size: clamp(22px, 2.4vw, 28px); font-weight: 600; }
+  .era span { color: var(--mist); font-size: 15px; }
+  @media (max-width: 720px) { .eras { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- portrait pair ---------- */
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 3vw, 40px);
+  }
+  .pair .figure img { aspect-ratio: 3 / 4; object-fit: cover; }
+  .pair .figure figcaption { font-family: var(--display); font-size: 20px; color: var(--snow); }
+  .pair .figure figcaption small { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: var(--gold); margin-top: 4px; }
+
+  /* ---------- star diagram ---------- */
+  .rev {
+    display: grid;
+    justify-items: center;
+    gap: 28px;
+    text-align: center;
+    padding-block: 20px;
+  }
+  .star-glow { filter: drop-shadow(0 0 28px rgba(230, 184, 94, 0.6)) drop-shadow(0 0 70px rgba(230, 184, 94, 0.25)); }
+  .star {
+    width: clamp(160px, 24vw, 240px);
+    aspect-ratio: 1;
+    background: radial-gradient(circle at 50% 42%, #FFF7D6 0%, var(--gold) 38%, var(--gold-3) 100%);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    animation: starpulse 3.2s ease-in-out infinite;
+  }
+  @keyframes starpulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.06) rotate(3deg); }
+  }
+  .rev__title { font-family: var(--display); font-weight: 700; font-size: clamp(24px, 3.4vw, 40px); color: var(--gold-2); }
+  .rev__factors {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    max-width: 900px;
+  }
+  .factor {
+    background: var(--paper);
+    color: var(--paper-ink);
+    border-radius: 999px;
+    padding: 18px 20px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(19px, 2.2vw, 26px);
+    line-height: 1.15;
+  }
+  .factor small { display: block; font-family: var(--body); font-weight: 400; font-size: 14px; color: #5A6274; margin-top: 4px; }
+  .rev__note { color: var(--mist); font-style: italic; font-family: var(--display); font-size: 18px; }
+  @media (max-width: 720px) { .rev__factors { grid-template-columns: 1fr; } }
+
+  /* ---------- timeline as light string ---------- */
+  .tl {
+    position: relative;
+    margin-top: 40px;
+    padding-left: 64px;
+  }
+  .tl::before {
+    content: "";
+    position: absolute;
+    left: 22px; top: 0; bottom: 0;
+    width: 2px;
+    background: #3B4A63;
+  }
+  .tl-item {
+    position: relative;
+    padding: 6px 0 40px;
+  }
+  .tl-item .bulb {
+    position: absolute;
+    left: -42px; top: 14px;
+    animation-name: twinkle;
+  }
+  .tl-item .bulb::before { display: none; }
+  .tl-item .bulb::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: -8px;
+    width: 6px; height: 8px;
+    margin-left: -3px;
+    background: #4A5A78;
+  }
+  .tl__year {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+  }
+  .tl__title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(22px, 2.8vw, 32px);
+    line-height: 1.1;
+    margin-top: 4px;
+  }
+  .tl__text { color: var(--mist); max-width: 58ch; margin-top: 8px; }
+  .tl-item--media {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 22px;
+    align-items: start;
+  }
+  .tl-item--media .figure img { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); }
+  .tl-winter {
+    position: relative;
+    margin: 6px 0 40px -64px;
+    padding: 22px 22px 22px 64px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, rgba(116, 185, 255, 0.14), rgba(244, 239, 228, 0.05));
+    border: 1px solid rgba(116, 185, 255, 0.25);
+  }
+  .tl-winter b { font-family: var(--display); font-size: clamp(22px, 2.6vw, 30px); color: #CFE6FF; }
+  .tl-winter span { display: block; color: var(--mist); margin-top: 6px; max-width: 58ch; }
+  .tl-item--rev .bulb { width: 14px; height: 21px; }
+  @media (max-width: 640px) {
+    .tl { padding-left: 46px; }
+    .tl::before { left: 14px; }
+    .tl-item .bulb { left: -32px; }
+    .tl-item--media { grid-template-columns: 1fr; }
+    .tl-item--media .figure { max-width: 240px; }
+    .tl-winter { margin-left: -46px; padding-left: 46px; }
+  }
+
+  /* ---------- stacked cards ---------- */
+  .stack { display: grid; gap: 14px; }
+  .stack__card {
+    border-radius: 10px;
+    padding: clamp(22px, 3vw, 34px);
+    background: linear-gradient(160deg, #1E2F55, #131F3A);
+    border: 1px solid rgba(116, 185, 255, 0.22);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    display: grid;
+    gap: 6px;
+  }
+  .stack__card b { font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.6vw, 44px); line-height: 1.05; }
+  .stack__card .tl__year { color: var(--mist); }
+  .stack__card span { font-family: var(--display); font-size: 18px; color: var(--snow); margin-top: 6px; }
+  @media (min-width: 820px) {
+    .stack__card:nth-child(2) { margin-left: 18%; }
+    .stack__card:nth-child(3) { margin-left: 36%; }
+  }
+
+  /* ---------- post-its ---------- */
+  .task {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 64px);
+    align-items: start;
+  }
+  .task__q {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(30px, 4.4vw, 52px);
+    line-height: 1.08;
+  }
+  .task__q em { font-style: italic; color: var(--gold-2); }
+  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .note {
+    background: linear-gradient(160deg, var(--postit), var(--postit-2));
+    color: #2A2410;
+    padding: 20px 18px 24px;
+    min-height: 150px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+    font-size: 15px;
+    line-height: 1.45;
+    transform: rotate(var(--r, -1.5deg));
+    position: relative;
+  }
+  .note::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: -8px;
+    width: 64px; height: 18px;
+    margin-left: -32px;
+    background: rgba(255, 255, 255, 0.45);
+    transform: rotate(-2deg);
+  }
+  .note b {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7A6210;
+    margin-bottom: 8px;
+  }
+  .note--green { background: linear-gradient(160deg, #BFEBB4, #9FD897); }
+  .note--green b { color: #2F6B2A; }
+  .note--pink { background: linear-gradient(160deg, #FFC3D8, #F5A3C0); }
+  .note--pink b { color: #8E2A52; }
+  .task__hint { margin-top: 22px; }
+  @media (max-width: 820px) { .task { grid-template-columns: 1fr; } }
+  @media (max-width: 420px) { .notes { grid-template-columns: 1fr; } }
+
+  /* ---------- history layout with sidebar ad ---------- */
+  .with-rail { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .rail { display: none; }
+  @media (min-width: 1240px) {
+    .with-rail { grid-template-columns: minmax(0, 1fr) 300px; }
+    .rail { display: block; padding-top: 24px; }
+  }
+
+  /* ---------- footer ---------- */
+  .footer {
+    border-top: 1px solid var(--line);
+    padding-block: clamp(48px, 7vw, 96px) 60px;
+    color: var(--mist);
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 32px;
+    align-items: end;
+  }
+  .footer .hero__code { font-size: clamp(40px, 6vw, 72px); margin-top: 8px; }
+  .footer p { max-width: 50ch; }
+  .footer__right { display: grid; gap: 10px; justify-items: start; }
+  @media (max-width: 720px) { .footer__grid { grid-template-columns: 1fr; align-items: start; } }
+
+  /* ---------- reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bulb, .bulb--blink, .bulb--sway, .star { animation: none !important; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    #snow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="lights" aria-hidden="true"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="progress" aria-hidden="true"><i></i></div>
+
+<main class="page">
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="wrap hero__inner">
+      <span class="eyebrow">Universitetet i Oslo · Honours-programmet · Første forelesing</span>
+      <div class="hero__code">HON1000</div>
+      <p class="hero__title">Innføring i kunstig intelligens for Honours-studentar</p>
+      <div class="hero__meta">
+        <span><b>Henrik Andersen Sveinsson</b></span>
+        <span>26. august 2026</span>
+        <span>Hausten 2026 og våren 2027</span>
+      </div>
+      <p class="hero__wink">Pynta til jul. Ja, vi veit at det er august.</p>
+      <nav class="hero__toc" aria-label="Innhald">
+        <a href="#praktisk">Praktisk</a>
+        <a href="#forventningar">Forventningar</a>
+        <a href="#historia">Historia om KI</a>
+        <a href="#oppgaver">Gruppeoppgåver</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============ AD: leaderboard ============ -->
+  <div class="wrap adslot">
+    <aside class="ad ad--leader" aria-label="Annonse">
+      <span class="ad__tag">Annonse</span>
+      <span class="ad__ph">Plasshaldar 728 × 90</span>
+      <div class="ad__mark">UiO Honours<small>Universitetet i Oslo</small></div>
+      <div class="ad__text"><strong>Nysgjerrig på meir enn eitt fag?</strong> Honours-programmet samlar ambisiøse studentar frå heile universitetet til tverrfagleg fordjuping.</div>
+      <a class="ad__cta" href="#">Les meir</a>
+    </aside>
+  </div>
+
+  <!-- ============ DEL I: PRAKTISK ============ -->
+  <section class="chapter" id="praktisk">
+    <div class="wrap">
+      <div class="chapter__head reveal">
+        <span class="eyebrow">Del I · Praktisk informasjon</span>
+        <h2>Dette skal vi gjennom i dag</h2>
+        <p class="lede">Først det praktiske om emnet, så kva vi ventar av kvarandre, og til slutt ei historisk oversikt over kunstig intelligens: frå draumen hos dei gamle grekarane til agentane som kom i fjor.</p>
+      </div>
+
+      <!-- Undervisarar -->
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Kven de møter</span>
+        <h3>Undervisarar</h3>
+        <div class="people">
+          <figure class="person">
+            <img src="img/henrik.jpg" alt="Portrett av Henrik Andersen Sveinsson" loading="lazy">
+            <figcaption>
+              <div class="person__name">Henrik Andersen Sveinsson</div>
+              <div class="person__role cap">Emneansvarleg</div>
+            </figcaption>
+          </figure>
+          <figure class="person">
+            <img src="img/ane.jpg" alt="Portrett av Ane Kristine Espeseth" loading="lazy">
+            <figcaption>
+              <div class="person__name">Ane Kristine Espeseth</div>
+              <div class="person__role cap">Gruppelærar</div>
+            </figcaption>
+          </figure>
+          <figure class="person">
+            <img src="img/lisa.jpg" alt="Portrett av Lisa Sørdal" loading="lazy">
+            <figcaption>
+              <div class="person__name">Lisa Sørdal</div>
+              <div class="person__role cap">Gruppelærar</div>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="people__more">... og ei rekkje gjesteforelesarar gjennom året.</p>
+      </div>
+
+      <!-- Perspektiv -->
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Innhald</span>
+        <h3>KI sett frå fleire perspektiv</h3>
+        <p class="lede" style="margin-bottom: 26px;">Kunstig intelligens er ikkje eitt fag. I HON1000 ser vi på KI gjennom mange faglege briller, og de kjem sjølve med nokre av dei.</p>
+        <div class="pills">
+          <span class="pill">Juridiske</span>
+          <span class="pill">Matematiske</span>
+          <span class="pill">Etiske</span>
+          <span class="pill">Samfunnsvitskaplege</span>
+          <span class="pill">Filosofiske</span>
+          <span class="pill">Pedagogiske</span>
+          <span class="pill">Språkvitskaplege</span>
+          <span class="pill pill--faint">og fleire</span>
+        </div>
+      </div>
+
+      <!-- Læringsmål / Aktivitetar / Vurdering -->
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Emnet i tre kort</span>
+        <h3>Læringsmål, aktivitetar og vurdering</h3>
+        <div class="cards3">
+          <article class="card card--pine">
+            <h3>Læringsmål</h3>
+            <ul class="list">
+              <li>Utvikle tverrfagleg kompetanse gjennom tverrfagleg <strong>eksponering</strong> og <strong>samarbeid</strong></li>
+              <li>Utvikle kompetanse i skriving og samarbeid</li>
+              <li>Grunnleggjande kunnskap om KI</li>
+              <li>Djupare kunnskap om utvalde tema innan KI</li>
+            </ul>
+          </article>
+          <article class="card card--berry">
+            <h3>Aktivitetar</h3>
+            <ul class="list">
+              <li>Diskusjonar med kvarandre og med framifrå forskarar</li>
+              <li>Skrive refleksjonsnotat og prosjektoppgåver</li>
+              <li>Lese, skrive og diskutere KI</li>
+              <li>Utvalde tema i seminar</li>
+            </ul>
+          </article>
+          <article class="card card--gold">
+            <h3>Vurdering</h3>
+            <ul class="list">
+              <li>Individuell innlevering av refleksjonsnotat</li>
+              <li>Gruppevis innlevering av prosjektoppgåver</li>
+              <li>Obligatorisk oppmøte og deltaking i <strong>all undervisning</strong></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+
+      <!-- Temabolkar -->
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Fire temabolkar over to semester</span>
+        <h3>Temabolkar</h3>
+        <div class="themes">
+          <article class="theme theme--active">
+            <span class="eyebrow">Haust 2026 · Tema 1</span>
+            <h4>Store språkmodellar</h4>
+            <ul class="theme__people">
+              <li>Tor Ole Odden <small>Korleis kan vi forstå store språkmodellar?</small></li>
+              <li>Kristin Bergtora Sandvik <small>Kva gjer det med samfunnet at vi bruker dei?</small></li>
+              <li>Sara Pernille Jensen <small>Filosofiske sider ved store språkmodellar</small></li>
+            </ul>
+          </article>
+          <article class="theme theme--next">
+            <span class="eyebrow">Haust 2026 · Tema 2</span>
+            <h4>Vitskaplege bruksområde</h4>
+            <p class="theme__note">Korleis KI endrar måten vi forskar på, frå proteinfolding til materialvitskap.</p>
+          </article>
+          <article class="theme">
+            <span class="eyebrow eyebrow--muted">Vår 2027 · Tema 3</span>
+            <h4>Agentsystem</h4>
+            <p class="theme__note">Når språkmodellane får verktøy og byrjar handle på eiga hand.</p>
+          </article>
+          <article class="theme">
+            <span class="eyebrow eyebrow--muted">Vår 2027 · Tema 4</span>
+            <h4>Samfunnsverknader</h4>
+            <p class="theme__note">Til dømes berekraft, krig og makt.</p>
+          </article>
+        </div>
+        <div class="ways">
+          <div class="way"><b>Foredrag og diskusjon</b><span>Alle førebur spørsmål i gruppe før kvart eksterne foredrag.</span></div>
+          <div class="way"><b>Lese artiklar</b><span>Vi les og diskuterer fagartiklar saman.</span></div>
+          <div class="way"><b>Refleksjonsnotat</b><span>Ein måte å få meir ut av foredraga på.</span></div>
+          <div class="way"><b>Gruppeoppgåve</b><span>Tverrfagleg, med sjølvvalt emne i kvar temabolk.</span></div>
+        </div>
+      </div>
+
+      <!-- Refleksjonsnotat -->
+      <div class="block reveal">
+        <div class="split split--text-wide">
+          <div>
+            <span class="eyebrow eyebrow--muted">Individuelt arbeid</span>
+            <h3>Refleksjonsnotat</h3>
+            <ul class="list">
+              <li>Leverast seinast <strong>søndag</strong> etter kvart eksterne foredrag</li>
+              <li>Skrivast etter ein fast mal med tre delar: innhald, påverknad og interaksjon</li>
+            </ul>
+            <div class="stats">
+              <div class="stat"><b>10 av 12</b><span>notat må leverast for å bestå emnet</span></div>
+              <div class="stat"><b>8</b><span>av dei må vere godkjende</span></div>
+            </div>
+          </div>
+          <div class="form" aria-label="Mal for refleksjonsnotat">
+            <div class="form__row"><b>Tittel på foredraget</b><i></i></div>
+            <div class="form__row"><b>Foredragshaldar</b><i></i></div>
+            <div class="form__field">
+              <header><b>Innhald:</b> Kva ville foredragshaldaren formidle? Skriv om den viktigaste bodskapen først, før du skildrar andre underpunkt. Sikt mot 50 til 100 ord.</header>
+              <div class="lines"></div>
+            </div>
+            <div class="form__field">
+              <header><b>Påverknad:</b> Var det noko i foredraget som engasjerte deg? Korleis påverkar innhaldet menneska i livet ditt? Kva med samfunnet elles? Sikt mot 100 til 150 ord.</header>
+              <div class="lines"></div>
+            </div>
+            <div class="form__field form__field--tall">
+              <header><b>Interaksjon:</b> Kva spurde du foredragshaldaren om? Fekk du svar på det du lurte på? Kva tenkjer du om svaret? Kunne du stilt spørsmålet annleis for å få eit anna svar? Skreiv du ned fleire spørsmål? Sikt mot 150 til 200 ord.</header>
+              <div class="lines"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gruppeoppgåver -->
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Gruppearbeid</span>
+        <h3>Gruppeoppgåver i kvar temabolk</h3>
+        <ul class="list list--snow">
+          <li><strong>Tre personar</strong> per gruppe, éin frå kvart fakultet</li>
+          <li>De vel sjølve ei problemstilling knytt til temaet for perioden, til dømes store språkmodellar</li>
+          <li>Oppgåva skal bruke perspektiv frå <strong>alle tre fagområda</strong></li>
+          <li>Om lag seks sider, figurar medrekna</li>
+        </ul>
+      </div>
+
+      <!-- Utan KI -->
+      <div class="block reveal">
+        <div class="callout">
+          <span class="eyebrow">Éin regel som er lett å hugse</span>
+          <h3>Vi skriv oppgåvene sjølve, utan KI</h3>
+          <div class="prose">
+            <p>Oppgåvene skriv de for å <strong>lære</strong>, ikkje for å levere eit best mogleg produkt. Vi bryr oss ikkje om skrivefeil og klønete formuleringar, innanfor rimelege grenser.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AD: in-feed ============ -->
+  <div class="wrap adslot">
+    <aside class="ad ad--box" aria-label="Annonse">
+      <span class="ad__tag">Annonse</span>
+      <span class="ad__ph">Plasshaldar 300 × 250</span>
+      <div class="ad__mark">UiO Honours<small>Universitetet i Oslo</small></div>
+      <div class="ad__text"><strong>HON1000 er berre byrjinga.</strong> Sjå kva resten av Honours-programmet har å by på: seminar, forskingsnære prosjekt og eit miljø på tvers av fakulteta.</div>
+      <a class="ad__cta" href="#">Sjå programmet</a>
+    </aside>
+  </div>
+
+  <!-- ============ DEL II: FORVENTNINGAR ============ -->
+  <section class="chapter" id="forventningar">
+    <div class="wrap">
+      <div class="chapter__head reveal">
+        <span class="eyebrow">Del II · Forventningar</span>
+        <h2>Forventningar til dykk</h2>
+      </div>
+
+      <div class="split split--img-wide reveal">
+        <ul class="list list--snow">
+          <li>Til stades, både fysisk og mentalt</li>
+          <li>Samarbeide med kvarandre</li>
+          <li>Hente inn kunnskapen de treng sjølve, både litteratur til oppgåvene og svar frå oss når de lurer på noko</li>
+          <li>Stille førebudd til timane, altså lese førebuingsmateriellet</li>
+          <li><strong>De vil kvarandre vel!</strong></li>
+          <li>Ta kontakt om de lurer på noko eller har tilbakemeldingar. Vi svarar gjerne.</li>
+        </ul>
+        <figure class="figure">
+          <img src="img/klasserom.jpg" alt="Teikna illustrasjon av studentar som arbeider saman i eit klasserom ved Universitetet i Oslo" loading="lazy">
+          <figcaption class="cap">Slik ser vi for oss det: samarbeid, diskusjon og bøker på bordet.</figcaption>
+        </figure>
+      </div>
+
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Frå studentane sjølve</span>
+        <h3>Kva er viktig for dykk?</h3>
+        <figure class="figure figure--paper">
+          <img src="img/stikkord.png" alt="Kart over stikkord frå studentane, som samarbeid, nysgjerrigheit, openheit, kritisk tenking og ydmykheit" loading="lazy">
+          <figcaption class="cap">Stikkord frå studentane om kva som er viktig i HON1000: samarbeid, nysgjerrigheit, openheit, ærlegdom, kritisk tenking og ydmykheit går att.</figcaption>
+        </figure>
+      </div>
+
+      <div class="divider" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l2.6 8.2L24 9.2l-7 5.4 2.4 9.4L12 18.6 4.6 24 7 14.6 0 9.2l9.4-1z"/></svg>
+      </div>
+      <p class="hero__title reveal" style="text-align:center; max-width:none;">Spørsmål om det praktiske?</p>
+    </div>
+  </section>
+
+  <!-- ============ DEL III: HISTORIA ============ -->
+  <section class="chapter" id="historia">
+    <div class="wrap">
+      <div class="with-rail">
+        <div>
+          <div class="chapter__head reveal">
+            <span class="eyebrow">Del III · Historisk oversikt over KI</span>
+            <h2>Frå ein bronsekjempe til agentar på nettet</h2>
+            <p class="lede">Historia om kunstig intelligens har fire aktar: draumen, fødselen, vinteren og revolusjonen.</p>
+          </div>
+
+          <div class="eras reveal">
+            <a class="era" href="#draumen"><b>Draumen</b><span>Talos, Aristoteles, Leibniz, Lovelace og Turing</span></a>
+            <a class="era" href="#fodselen"><b>Fødselen</b><span>Datamaskinene, imitasjonsspelet og Dartmouth 1956</span></a>
+            <a class="era" href="#vinteren"><b>«KI-vinteren»</b><span>Symbolsk KI, ekspertsystem og Deep Blue</span></a>
+            <a class="era" href="#revolusjonen"><b>Revolusjonen</b><span>Djuplæring, språkmodellar og agentar</span></a>
+          </div>
+
+          <!-- Draumen -->
+          <div class="block" id="draumen">
+            <span class="eyebrow eyebrow--muted reveal">Akt 1</span>
+            <h3 class="reveal">Draumen om intelligente maskiner</h3>
+          </div>
+        </div>
+
+        <aside class="rail" aria-label="Annonse">
+          <div class="rail__sticky">
+            <div class="ad ad--tall">
+              <span class="ad__tag">Annonse</span>
+              <span class="ad__ph">300 × 600</span>
+              <div class="ad__art"><span>Tverrfagleg fordjuping for dei som vil meir</span></div>
+              <div class="ad__mark">UiO Honours<small>Universitetet i Oslo</small></div>
+              <div class="ad__text">Eit eige studieløp ved sida av graden din, saman med studentar frå heile universitetet.</div>
+              <a class="ad__cta" href="#">Les meir</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <figure class="figure bleed hero-figure reveal">
+      <img src="img/talos.jpg" alt="Måleri av bronsekjempa Talos som vassar i havet utanfor Kreta medan små seglskip flyktar" loading="lazy">
+      <figcaption>
+        <span class="eyebrow">Gresk mytologi</span>
+        <h3>Talos, vaktaren av Kreta</h3>
+      </figcaption>
+    </figure>
+
+    <div class="wrap">
+      <div class="block prose reveal" style="margin-top: 40px;">
+        <p>Alt dei gamle grekarane drøymde om kunstig intelligens. I gresk mytologi finst det ein gigantisk robot av bronse, Talos. Han vart skapt av guden Hefaistos og var ein autonom vaktar for øya Kreta. Tre gonger om dagen patruljerte han øya og kasta steinar på fiendtlege skip.</p>
+        <p>Det vesentlege, det som skil Talos frå gudar og menneske, er at han er <strong>bygd, ikkje fødd</strong>, men likevel ein intelligent og sjølvstendig aktør. Altså kunstig intelligens.</p>
+      </div>
+
+      <div class="block split split--flip reveal">
+        <div>
+          <span class="eyebrow eyebrow--muted">Formell logikk</span>
+          <h3>Aristoteles</h3>
+          <p class="quote quote--sm">Argumentet er gyldig viss og berre viss konklusjonen følgjer av premissane.</p>
+          <div class="prose" style="margin-top: 22px;">
+            <p>Ein annan forløpar er Aristoteles, som grunnla den formelle logikken. Det førte til tanken om at ein kanskje kan <strong>mekanisere logikken</strong>, og dermed lage kunstig intelligens. I filosofien kan ein forresten bruke nesten ei heil masteroppgåve berre på å avklare kva omgrepet intelligens tyder.</p>
+          </div>
+        </div>
+        <figure class="figure">
+          <img src="img/aristoteles.jpg" alt="Utsnitt av Rafaels freske Skulen i Aten, med Platon og Aristoteles" loading="lazy">
+          <figcaption class="cap">Platon og Aristoteles i Rafaels «Skulen i Aten».</figcaption>
+        </figure>
+      </div>
+
+      <div class="block split reveal">
+        <figure class="figure">
+          <img src="img/leibniz.jpg" alt="Portrett av Gottfried Wilhelm Leibniz" loading="lazy">
+          <figcaption class="cap">Gottfried Wilhelm Leibniz.</figcaption>
+        </figure>
+        <div>
+          <span class="eyebrow eyebrow--muted">Eit universelt språk</span>
+          <h3>Leibniz</h3>
+          <ul class="list">
+            <li>Leibniz såg for seg eit universelt språk, <strong>Characteristica Universalis</strong>, som kunne uttrykkje alle vitskaplege og filosofiske omgrep utan tvitydigheita i vanleg språk. Kvar idé skulle få sitt eige symbol.</li>
+            <li>Ein logisk kalkulator, <strong>Calculus Ratiocinator</strong>, skulle vere eit sett med reglar for symbola. Med dei kunne ein avgjere om ei utsegn var sann på ein mekanisk måte, nesten som å løyse ei likning.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Universelle, programmerbare maskiner</span>
+        <h3>Ada Lovelace og Alan Turing</h3>
+        <div class="pair" style="margin-top: 22px;">
+          <figure class="figure">
+            <img src="img/ada.jpg" alt="Måleri av Ada Lovelace" loading="lazy">
+            <figcaption>Ada Lovelace<small>Note G, 1843</small></figcaption>
+          </figure>
+          <figure class="figure">
+            <img src="img/turing.jpg" alt="Fotografi av Alan Turing" loading="lazy">
+            <figcaption>Alan Turing<small>Den universelle maskina, 1936</small></figcaption>
+          </figure>
+        </div>
+        <div class="prose" style="margin-top: 28px;">
+          <p>Ada Lovelace skreiv den første algoritmen som var meint for ei maskin: ein metode for å rekne ut Bernoulli-tal. Det som gjer henne kjend, er at ho i detalj skildra korleis operasjonane skulle gjennomførast, slik at ei maskin kunne utføre dei. Ho såg òg for seg at datamaskiner kunne lage musikk.</p>
+          <p>I 1936 skildra Alan Turing ei maskin som kan rekne ut <strong>alt som kan reknast ut</strong>.</p>
+        </div>
+      </div>
+
+      <!-- Fødselen -->
+      <div class="block" id="fodselen">
+        <span class="eyebrow eyebrow--muted reveal">Akt 2</span>
+        <h3 class="reveal">Fødselen</h3>
+      </div>
+
+      <div class="block split split--img-wide reveal" style="margin-top: 28px;">
+        <div>
+          <span class="eyebrow eyebrow--muted">1940- og 1950-talet</span>
+          <h3>Digitale datamaskiner</h3>
+          <div class="prose">
+            <p>No har vi tanken om at all kunnskap kan formaliserast i eit universelt språk, og trua på at ein logisk kalkulator kan bruke dette språket til å rekne ut sanningar. Det er frå Leibniz. Vi har fått ei skildring av ei maskin som kan rekne ut alt som kan reknast ut, frå Turing.</p>
+            <p>Og så kjem dei digitale datamaskinene. Dei er faktisk Turing-maskiner: i prinsippet kan dei rekne ut alt som kan reknast ut. Det førte til ein <strong>enorm optimisme</strong>.</p>
+          </div>
+        </div>
+        <figure class="figure">
+          <img src="img/datamaskin.jpg" alt="Svart-kvitt-fotografi av ei tidleg digital datamaskin med rekkjer av radiorøyr" loading="lazy">
+          <figcaption class="cap">Ei tidleg digital datamaskin: rekkjer av radiorøyr, eit kontrollpanel og eit skrivebord.</figcaption>
+        </figure>
+      </div>
+
+      <div class="block split split--flip reveal">
+        <div>
+          <span class="eyebrow eyebrow--muted">Turing, 1950</span>
+          <h3>Imitasjonsspelet</h3>
+          <ul class="list">
+            <li>Kan ei maskin snakke som eit menneske?</li>
+            <li>Går utanom spørsmålet «Can machines think?»</li>
+            <li>Seier noko om optimismen på den tida</li>
+          </ul>
+          <p class="quote quote--sm" style="margin-top: 26px;">Kan ei maskin produsere ein samtale som er umogleg å skilje frå ein menneskeleg samtale?</p>
+        </div>
+        <figure class="figure">
+          <img src="img/imitation-game.jpg" alt="Filmplakat frå The Imitation Game med Benedict Cumberbatch og Keira Knightley framfor ei Enigma-maskin" loading="lazy">
+          <figcaption class="cap">Frå filmen «The Imitation Game» (2014).</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <figure class="figure bleed hero-figure reveal" style="margin-top: clamp(56px, 8vw, 112px);">
+      <img src="img/dartmouth.jpg" alt="Svart-kvitt-fotografi av deltakarane på Dartmouth-konferansen i 1956, sitjande på plenen" loading="lazy">
+      <figcaption>
+        <span class="eyebrow">Dartmouth College, sommaren 1956</span>
+        <h3>Fødselen av omgrepet kunstig intelligens</h3>
+      </figcaption>
+    </figure>
+
+    <div class="wrap">
+      <div class="block reveal" style="margin-top: 40px;">
+        <p class="quote" lang="en">We propose that a 2-month, 10-man study of artificial intelligence be carried out during the summer of 1956 at Dartmouth College in Hanover, New Hampshire. The study is to proceed on the basis of the conjecture that every aspect of learning or any other feature of intelligence can in principle be so precisely described that a machine can be made to simulate it. An attempt will be made to find how to make machines use language, form abstractions and concepts, solve kinds of problems now reserved for humans, and improve themselves. We think that a significant advance can be made in one or more of these problems if a carefully selected group of scientists work on it together for a summer.
+          <cite>Forslaget til Dartmouth-konferansen, 1956. Verdt å lese i sin heilskap.</cite>
+        </p>
+      </div>
+
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Spørsmålet vi kjem tilbake til</span>
+        <h3>Kva er intelligens?</h3>
+        <ul class="list">
+          <li>Sentiens, altså sansing?</li>
+          <li>Medvit? Sjølvmedvit?</li>
+          <li>Evna til å imitere eit menneske? (Turing, 1950)</li>
+        </ul>
+        <p class="quote quote--sm" style="margin-top: 26px;" lang="en">If one could devise a successful chess machine, one would seem to have penetrated to the core of human intellectual endeavor.
+          <cite>Newell og Simon, 1958</cite>
+        </p>
+      </div>
+
+      <!-- Vinteren -->
+      <div class="block" id="vinteren">
+        <span class="eyebrow eyebrow--muted reveal">Akt 3</span>
+        <h3 class="reveal">«KI-vinteren»</h3>
+      </div>
+
+      <div class="block reveal" style="margin-top: 28px;">
+        <span class="eyebrow eyebrow--muted">I tråd med Aristoteles og Leibniz</span>
+        <h3>Symbolsk KI</h3>
+        <p class="quote quote--sm" lang="en">Intelligence can in principle be so precisely described that a machine can be made to simulate it.<cite>Dartmouth, 1956</cite></p>
+        <ul class="list" style="margin-top: 26px;">
+          <li>Symbol og reglar</li>
+          <li>Til dømes: ein katt har pels, fire bein, vêrhår og seier mjau</li>
+          <li>Ekspertsystem i medisinen: symptom gjev diagnose, diagnose gjev behandling</li>
+          <li>IBM Watson, som svarar på spørsmål stilte på naturleg språk</li>
+          <li>Har ikkje fungert særleg godt til å lage nokon <strong>generell</strong> intelligens: dårleg til å generalisere, og går veldig gale på det den ikkje er programmert for</li>
+          <li>Resultatet vart det vi kallar KI-vinteren</li>
+        </ul>
+      </div>
+    </div>
+
+    <figure class="figure bleed hero-figure reveal" style="margin-top: clamp(56px, 8vw, 112px);">
+      <img src="img/kasparov.jpg" alt="Garri Kasparov held seg for andletet ved sjakkbrettet under partiet mot Deep Blue" loading="lazy">
+      <figcaption>
+        <span class="eyebrow">1996 og 1997</span>
+        <h3>Deep Blue mot Kasparov</h3>
+      </figcaption>
+    </figure>
+
+    <div class="wrap">
+      <div class="block prose reveal" style="margin-top: 40px;">
+        <p>Nokre suksessar fekk den symbolske KI-en altså. Deep Blue hadde ein del sjakkopningar programmerte inn, og utover i partiet var den god fordi den kunne rekne seg langt framover og velje trekk med gode sjansar for å leie mot siger.</p>
+        <p>Men ingen generell intelligens: eit sjakkprogram som ikkje klarer noko anna enn sjakk.</p>
+      </div>
+
+      <!-- Revolusjonen -->
+      <div class="block" id="revolusjonen">
+        <span class="eyebrow eyebrow--muted reveal">Akt 4</span>
+        <h3 class="reveal">Revolusjonen</h3>
+      </div>
+
+      <div class="block reveal" style="margin-top: 28px;">
+        <span class="eyebrow eyebrow--muted">Rundt 2010 endra det seg ganske brått</span>
+        <h3>Djuplæringsrevolusjonen</h3>
+        <div class="rev">
+          <div class="star-glow"><div class="star" role="img" aria-label="Gullstjerne"></div></div>
+          <div class="rev__title">Tre ting kom saman</div>
+          <div class="rev__factors">
+            <div class="factor">Massive datasett<small>Internett, bilete, tekst</small></div>
+            <div class="factor">Reknekraft<small>Grafikkort som reknar parallelt</small></div>
+            <div class="factor">Algoritmar<small>Djupe nett og måtar å trene dei på</small></div>
+          </div>
+          <p class="rev__note">Dette er viktig. På lysarket var det teikna ekstra stygt for at de skulle hugse det. Her fekk det ei stjerne i staden.</p>
+        </div>
+      </div>
+
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Lyslenkja</span>
+        <h3>Frå fødsel til revolusjon</h3>
+        <p class="lede">Kvar pære er ei hending. Legg merke til kor tett dei heng etter 2012.</p>
+
+        <div class="tl">
+          <div class="tl-item">
+            <span class="bulb bulb--red" style="--d:0s"></span>
+            <div class="tl__year">1950</div>
+            <div class="tl__title">Imitasjonsspelet</div>
+            <p class="tl__text">Turing spør ikkje om maskiner kan tenkje, men om dei kan snakke som oss.</p>
+          </div>
+          <div class="tl-item">
+            <span class="bulb bulb--gold" style="--d:0.7s"></span>
+            <div class="tl__year">1956</div>
+            <div class="tl__title">Dartmouth-konferansen</div>
+            <p class="tl__text">Omgrepet kunstig intelligens får namn.</p>
+          </div>
+          <div class="tl-item tl-item--media">
+            <div>
+              <span class="bulb bulb--green" style="--d:1.4s"></span>
+              <div class="tl__year">1958</div>
+              <div class="tl__title">Perseptronet</div>
+              <p class="tl__text">Rosenblatts maskin som lærer av døme: eit enkelt kunstig nevron med vekter og ein terskel.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/perceptron.jpg" alt="Skjema over eit einlags perseptron" loading="lazy"></figure>
+          </div>
+          <div class="tl-item tl-item--media">
+            <div>
+              <span class="bulb bulb--blue" style="--d:2.1s"></span>
+              <div class="tl__year">1969</div>
+              <div class="tl__title">«Perceptrons»</div>
+              <p class="tl__text">Boka til Minsky og Papert viser kva eitt lag ikkje kan lære, og entusiasmen kjølnar.</p>
+            </div>
+            <figure class="figure"><img src="img/perceptrons-bok.jpg" alt="Omslaget til boka Perceptrons" loading="lazy"></figure>
+          </div>
+          <div class="tl-item">
+            <span class="bulb bulb--pink" style="--d:2.8s"></span>
+            <div class="tl__year">1970 til 1986</div>
+            <div class="tl__title">Backpropagation</div>
+            <p class="tl__text">Tidslinja er litt uklar: metoden finst i 1970, blir brukt på nevrale nett rundt 1982, og slår gjennom i 1986. Med han kan ein trene nett med fleire lag.</p>
+          </div>
+          <div class="tl-winter">
+            <b>Vinteren, om lag 1974 til 2010</b>
+            <span>Samfunnet blir digitalisert, vi får dataspel og sjakkprogram, men eigentleg ingen kunstig intelligens. Det ein kan lage, er program som ikkje klarer noko anna enn det dei er laga for.</span>
+          </div>
+          <div class="tl-item">
+            <span class="bulb bulb--green" style="--d:3.5s"></span>
+            <div class="tl__year">1980-talet</div>
+            <div class="tl__title">CNN</div>
+            <p class="tl__text">Konvolusjonsnett: nett som «ser», bygde etter mønster frå synssystemet.</p>
+          </div>
+          <div class="tl-item">
+            <span class="bulb bulb--red" style="--d:4.2s"></span>
+            <div class="tl__year">1997</div>
+            <div class="tl__title">Deep Blue slår Kasparov</div>
+            <p class="tl__text">Ein siger for symbolsk KI og rå reknekraft, ikkje for læring.</p>
+          </div>
+          <div class="tl-item tl-item--media tl-item--rev">
+            <div>
+              <span class="bulb bulb--gold bulb--blink" style="--d:0s;--t:1.8s"></span>
+              <div class="tl__year">2012</div>
+              <div class="tl__title">AlexNet</div>
+              <p class="tl__text">Vinn ImageNet-konkurransen med stor margin. Djuplæringa tek av.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/alexnet.jpg" alt="Skjema over laga i AlexNet" loading="lazy"></figure>
+          </div>
+          <div class="tl-item tl-item--media tl-item--rev">
+            <div>
+              <span class="bulb bulb--green bulb--blink" style="--d:0.4s;--t:1.8s"></span>
+              <div class="tl__year">2013</div>
+              <div class="tl__title">word2vec</div>
+              <p class="tl__text">Ord blir vektorar. Tyding blir noko ein kan rekne med.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/word2vec.jpg" alt="Tittelen på artikkelen om word2vec" loading="lazy"></figure>
+          </div>
+          <div class="tl-item tl-item--media tl-item--rev">
+            <div>
+              <span class="bulb bulb--pink bulb--blink" style="--d:0.8s;--t:1.8s"></span>
+              <div class="tl__year">2014</div>
+              <div class="tl__title">GAN</div>
+              <p class="tl__text">To nett i duell lærer å lage bilete som ser ekte ut. Opphavet til deepfakes.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/gan.jpg" alt="Genererte andlet frå den første GAN-artikkelen" loading="lazy"></figure>
+          </div>
+          <div class="tl-item tl-item--rev">
+            <span class="bulb bulb--blue bulb--blink" style="--d:1.2s;--t:1.8s"></span>
+            <div class="tl__year">2016</div>
+            <div class="tl__title">AlphaGo slår Lee Sedol</div>
+            <p class="tl__text">Go var rekna som utanfor rekkjevidde i mange år framover.</p>
+          </div>
+          <div class="tl-item tl-item--media tl-item--rev">
+            <div>
+              <span class="bulb bulb--red bulb--blink" style="--d:1.6s;--t:1.8s"></span>
+              <div class="tl__year">2017</div>
+              <div class="tl__title">AlphaZero</div>
+              <p class="tl__text">Lærer sjakk, shogi og go frå null, berre ved å spele mot seg sjølv.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/alphazero.jpg" alt="Resultat for AlphaZero i sjakk, shogi og go" loading="lazy"></figure>
+          </div>
+          <div class="tl-item tl-item--media tl-item--rev">
+            <div>
+              <span class="bulb bulb--gold bulb--blink" style="--d:2s;--t:1.8s"></span>
+              <div class="tl__year">2017</div>
+              <div class="tl__title">Transformers</div>
+              <p class="tl__text">«Attention Is All You Need». Arkitekturen bak GPT og dei andre store språkmodellane.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/attention-paper.jpg" alt="Førstesida av artikkelen Attention Is All You Need" loading="lazy"></figure>
+          </div>
+          <div class="tl-item tl-item--media tl-item--rev">
+            <div>
+              <span class="bulb bulb--green bulb--blink" style="--d:2.4s;--t:1.8s"></span>
+              <div class="tl__year">2018 til 2020</div>
+              <div class="tl__title">AlphaFold</div>
+              <p class="tl__text">Proteinfolding, eit femti år gammalt problem i biologien, blir i praksis løyst.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/alphafold.jpg" alt="Figur frå AlphaFold-artikkelen med samanlikning mot eksperiment" loading="lazy"></figure>
+          </div>
+          <div class="tl-item tl-item--media tl-item--rev">
+            <div>
+              <span class="bulb bulb--pink bulb--blink" style="--d:2.8s;--t:1.8s"></span>
+              <div class="tl__year">2020</div>
+              <div class="tl__title">Diffusjonsmodellar</div>
+              <p class="tl__text">DDPM: bilete frå støy. Grunnlaget for DALL·E, Midjourney og Stable Diffusion.</p>
+            </div>
+            <figure class="figure figure--paper"><img src="img/ddpm.jpg" alt="Genererte andlet og småbilete frå DDPM-artikkelen" loading="lazy"></figure>
+          </div>
+        </div>
+        <p class="prose" style="margin-top: 8px;">No kjem alle desse teknologiane ut i verda og blir til produkt, slik som ChatGPT.</p>
+      </div>
+
+      <div class="block reveal">
+        <span class="eyebrow eyebrow--muted">Dei siste fem åra</span>
+        <h3>Agentrevolusjonen</h3>
+        <div class="stack" style="margin-top: 26px;">
+          <article class="stack__card">
+            <b>Språkmodellar</b>
+            <div class="tl__year">2020–2023</div>
+            <span>GPT-3 · ChatGPT · GPT-4</span>
+          </article>
+          <article class="stack__card">
+            <b>Resonnering</b>
+            <div class="tl__year">2024–2025</div>
+            <span>o1 · DeepSeek-R1 · IMO-gull</span>
+          </article>
+          <article class="stack__card">
+            <b>Agentar</b>
+            <div class="tl__year">2025 og framover</div>
+            <span>Verktøybruk · kodeagentar · research</span>
+          </article>
+        </div>
+      </div>
+
+      <div class="block reveal">
+        <span class="eyebrow">Neste veke</span>
+        <h3>Store språkmodellar</h3>
+        <p class="lede">Korleis kan ei maskin gjette neste ord så godt at det liknar forståing? Vi opnar transformeren.</p>
+        <div class="split split--text-wide" style="margin-top: 28px; align-items: start;">
+          <figure class="figure figure--paper">
+            <img src="img/attention-arrows.png" alt="Setninga «a fluffy blue creature roamed the verdant forest» med piler som viser kva ord som viser til kvarandre" loading="lazy">
+            <figcaption class="cap">Merksemd (attention): kvart ord ser på dei orda som er relevante for det.</figcaption>
+          </figure>
+          <figure class="figure figure--paper" style="max-width: 320px; margin-inline: auto;">
+            <img src="img/gpt-arkitektur.png" alt="Blokkskjema over GPT-arkitekturen med 96 lag av merksemd og feed forward" loading="lazy">
+            <figcaption class="cap">Ein GPT-blokk, gjenteken 96 gonger.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AD: in-feed ============ -->
+  <div class="wrap adslot">
+    <aside class="ad ad--box" aria-label="Annonse">
+      <span class="ad__tag">Annonse</span>
+      <span class="ad__ph">Plasshaldar 300 × 250</span>
+      <div class="ad__mark">UiO Honours<small>Universitetet i Oslo</small></div>
+      <div class="ad__text"><strong>Kjenner du nokon som burde søkje?</strong> Honours-programmet tek opp nye studentar kvart år. Tips ein venn som liker vanskelege spørsmål.</div>
+      <a class="ad__cta" href="#">Tips ein venn</a>
+    </aside>
+  </div>
+
+  <!-- ============ PAUSE ============ -->
+  <section class="chapter">
+    <div class="wrap" style="text-align:center;">
+      <span class="eyebrow">Kaffi, gløgg eller frisk luft</span>
+      <h2 style="margin-top: 12px;">Pause</h2>
+    </div>
+  </section>
+
+  <!-- ============ DEL IV: OPPGÅVER ============ -->
+  <section class="chapter" id="oppgaver">
+    <div class="wrap">
+      <div class="chapter__head reveal">
+        <span class="eyebrow">Del IV · Gruppeoppgåver</span>
+        <h2>To rundar med post-it-lappar</h2>
+        <p class="lede">Same oppskrift begge gongene: skriv, send vidare, bygg vidare. Poenget er breidde, så ikkje slå opp definisjonen. Vi vil at de skal arbeide med ideane til kvarandre.</p>
+      </div>
+
+      <div class="block task reveal">
+        <div>
+          <span class="eyebrow eyebrow--muted">Gruppeoppgåve 1</span>
+          <p class="task__q" style="margin-top: 10px;">Kva <em>meiner du</em> er intelligens?</p>
+          <p class="task__hint prose">Kvar person i gruppa skriv ned éin til tre idear, på éin til tre lappar.</p>
+        </div>
+        <div class="notes">
+          <div class="note" style="--r:-2deg"><b>Steg 1 · 5 min</b>Skriv ned éin til tre idear på kvar sin post-it-lapp.</div>
+          <div class="note note--green" style="--r:1.5deg"><b>Steg 2</b>Send lappane vidare i gruppa, alle samstundes.</div>
+          <div class="note note--pink" style="--r:-1deg"><b>Steg 3 · 5 min</b>Bygg vidare på ideen du har fått, på ein ny lapp.</div>
+          <div class="note" style="--r:2deg"><b>Steg 4</b>Tre rundar à fem minutt, så fem minutt oppsummering, og så ein runde i plenum.</div>
+        </div>
+      </div>
+
+      <div class="block task reveal">
+        <div>
+          <span class="eyebrow eyebrow--muted">Gruppeoppgåve 2</span>
+          <p class="task__q" style="margin-top: 10px;">Kva <em>trur du</em>, og kva <em>vil du</em>, at vi skal lære i HON1000?</p>
+          <p class="task__hint prose">Same metode som i stad. Vi justerer etter kor mykje tid vi har.</p>
+        </div>
+        <div class="notes">
+          <div class="note note--green" style="--r:1deg"><b>Steg 1 · 5 min</b>Éin til tre idear på kvar sin lapp.</div>
+          <div class="note" style="--r:-2deg"><b>Steg 2</b>Send vidare, samstundes.</div>
+          <div class="note" style="--r:1.5deg"><b>Steg 3 · 5 min</b>Bygg vidare på det du fekk.</div>
+          <div class="note note--pink" style="--r:-1.5deg"><b>Steg 4</b>Oppsummer i gruppa, deretter i plenum.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <div>
+        <span class="eyebrow">Vidare lesing</span>
+        <p style="margin-top: 10px;">Til dei som vil sjå inn i maskina: <a href="https://arxiv.org/abs/2501.16496">Open Problems in Mechanistic Interpretability</a> (arXiv 2501.16496).</p>
+        <div class="hero__code">HON1000</div>
+        <p style="margin-top: 10px;">Innføring i kunstig intelligens for Honours-studentar. Universitetet i Oslo, hausten 2026 og våren 2027.</p>
+      </div>
+      <div class="footer__right">
+        <span class="eyebrow eyebrow--muted">Lurer du på noko?</span>
+        <p>Ta kontakt med Henrik, Ane Kristine eller Lisa. Vi svarar gjerne, òg på tilbakemeldingar.</p>
+        <p class="cap">Sida er pynta til jul i august. Lysa blinkar til dei blir skrudde av.</p>
+      </div>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- string of lights ---------- */
+  var holder = document.querySelector('.lights');
+  var colors = ['red', 'gold', 'green', 'blue', 'pink'];
+  var seed = 7;
+  function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+
+  function buildLights() {
+    var W = holder.clientWidth || window.innerWidth;
+    var spans = Math.max(2, Math.round(W / 230));
+    var span = W / spans;
+    var y0 = 12, sag = 46;
+    var d = 'M0 ' + y0;
+    var html = '';
+    var k = 0;
+    for (var i = 0; i < spans; i++) {
+      var x0 = i * span, x1 = (i + 1) * span, cx = (x0 + x1) / 2;
+      d += ' Q' + cx.toFixed(1) + ' ' + sag + ' ' + x1.toFixed(1) + ' ' + y0;
+      var ts = [0.14, 0.32, 0.5, 0.68, 0.86];
+      for (var j = 0; j < ts.length; j++) {
+        var t = ts[j];
+        var x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cx + t * t * x1;
+        var y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * sag + t * t * y0;
+        var c = colors[k % colors.length];
+        var cls = 'bulb bulb--' + c + (k % 4 === 3 ? ' bulb--blink' : ' bulb--sway');
+        var delay = (rnd() * 3).toFixed(2) + 's';
+        var dur = (1.6 + rnd() * 2.2).toFixed(2) + 's';
+        html += '<span class="' + cls + '" style="left:' + x.toFixed(1) + 'px;top:' + (y + 6).toFixed(1) + 'px;--d:' + delay + ';--t:' + dur + '"></span>';
+        k++;
+      }
+    }
+    holder.innerHTML = '<svg viewBox="0 0 ' + W + ' 64" preserveAspectRatio="none"><path d="' + d + '"/></svg>' + html;
+  }
+  buildLights();
+  var rt;
+  window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(buildLights, 150); });
+
+  /* ---------- snow ---------- */
+  var canvas = document.getElementById('snow');
+  if (canvas && !reduce) {
+    var ctx = canvas.getContext('2d');
+    var flakes = [], W, H, running = true;
+    function size() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      var n = Math.min(170, Math.round((W * H) / 11000));
+      flakes = [];
+      for (var i = 0; i < n; i++) flakes.push(make(true));
+    }
+    function make(anywhere) {
+      return {
+        x: Math.random() * W,
+        y: anywhere ? Math.random() * H : -10,
+        r: 0.8 + Math.random() * 2.4,
+        vy: 0.4 + Math.random() * 1.1,
+        vx: -0.3 + Math.random() * 0.6,
+        a: 0.25 + Math.random() * 0.55,
+        p: Math.random() * Math.PI * 2
+      };
+    }
+    function tick() {
+      if (!running) return;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#F4EFE4';
+      for (var i = 0; i < flakes.length; i++) {
+        var f = flakes[i];
+        f.p += 0.01;
+        f.x += f.vx + Math.sin(f.p) * 0.3;
+        f.y += f.vy;
+        if (f.y > H + 10 || f.x < -10 || f.x > W + 10) flakes[i] = f = make(false);
+        ctx.globalAlpha = f.a;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    }
+    size();
+    tick();
+    window.addEventListener('resize', size);
+    document.addEventListener('visibilitychange', function () {
+      running = !document.hidden;
+      if (running) tick();
+    });
+  }
+
+  /* ---------- progress ---------- */
+  var bar = document.querySelector('.progress i');
+  function progress() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', progress, { passive: true });
+  progress();
+
+  /* ---------- reveal ---------- */
+  var items = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add('in'); });
+  }
+})();
+</script>
+</body>
+</html>
